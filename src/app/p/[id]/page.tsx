@@ -1,0 +1,12 @@
+"use client";
+
+import { FormEvent, useEffect, useState } from "react";
+
+export default function ProfileGate({ params }: { params: { id: string } }) {
+  const [profile, setProfile] = useState<any>(null); const [code, setCode] = useState(""); const [error, setError] = useState(""); const [busy, setBusy] = useState(false);
+  useEffect(() => { fetch(`/api/profiles/${params.id}`).then((r) => r.json()).then(setProfile); }, [params.id]);
+  const login = async (passcode: string) => { setBusy(true); setError(""); const response = await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ profileId: params.id, passcode }) }); const result = await response.json(); setBusy(false); if (!response.ok) return setError(result.error || "That code is not right"); window.location.href = result.redirect; };
+  const submit = (event: FormEvent) => { event.preventDefault(); login(code); };
+  if (!profile) return <main className="auth-page"><div className="auth-card"><div className="eyebrow">CareCircle</div><h1 className="display">Finding your circle…</h1><p className="muted">One moment.</p></div></main>;
+  return <main className="auth-page"><div className="auth-card"><a className="brand" href="/"><span className="brand-mark" />CareCircle</a><div className="eyebrow" style={{ marginTop: 35 }}>Private profile link</div><h1 className="display">Enter your care code.</h1><p className="muted">You are joining <strong>{profile.profile.elderName}</strong>’s circle. Use the code shared with you.</p><form onSubmit={submit}><div className="field"><label>Passcode</label><input autoFocus value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="8 characters" /></div>{error && <div className="error">{error}</div>}<button className="btn btn-primary btn-large" style={{ width: "100%", marginTop: 19 }} disabled={busy}>{busy ? "Checking…" : "Continue"}</button></form>{params.id === "demo" && <div className="demo-login"><h3>Open the judge-ready demo</h3><p>Choose a role to see its exact permissions and screen.</p><div className="demo-role-buttons"><button className="btn btn-secondary" onClick={() => login("CARE-ELDER")}>Elder · Today</button><button className="btn btn-secondary" onClick={() => login("CARE-CARETAKER")}>Caretaker · Manage</button><button className="btn btn-secondary" onClick={() => login("CARE-TRUSTED")}>Trusted · Notes</button></div></div>}</div></main>;
+}

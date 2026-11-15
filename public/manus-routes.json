@@ -1,0 +1,32 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "CareCircle home"
+    },
+    {
+      "path": "/p/:id",
+      "title": "Profile login"
+    },
+    {
+      "path": "/p/:id/today",
+      "title": "Today"
+    },
+    {
+      "path": "/p/:id/meds",
+      "title": "Medications"
+    },
+    {
+      "path": "/p/:id/appointments",
+      "title": "Appointments"
+    },
+    {
+      "path": "/p/:id/adherence",
+      "title": "Adherence"
+    },
+    {
+      "path": "/p/:id/notes",
+      "title": "Voice notes"
+    }
+  ]
+}
